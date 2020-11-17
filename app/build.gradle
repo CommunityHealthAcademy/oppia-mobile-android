@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         versionCode 81
-        versionName "7.1.5-cha.1.int"
+        versionName "7.1.5-cha.2.release"
 
         applicationId "org.lmh.cha"
 
