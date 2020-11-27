@@ -32,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
+import org.digitalcampus.oppia.adapter.RecyclerViewClickableAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -43,8 +44,11 @@ import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView;
+import org.digitalcampus.oppia.utils.ui.MediaScanView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,6 +56,7 @@ import javax.inject.Inject;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
@@ -61,6 +66,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     public static final String JUMPTO_TAG = "JumpTo";
     public static final int RESULT_JUMPTO = 99;
+    public static final String EXTRA_FROM_WEBLINK = "extra_from_weblink";
 
     private Course course;
     private CompleteCourse parsedCourse;
@@ -73,12 +79,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Inject
     CompleteCourseProvider completeCourseProvider;
     private AlertDialog aDialog;
+    private MediaScanView mediaScanView;
+    private RecyclerView recyclerCourseSections;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        initialize(false);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
         prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView = findViewById(R.id.loading_course);
+        mediaScanView = findViewById(R.id.view_media_scan);
+        recyclerCourseSections = findViewById(R.id.recycler_course_sections);
+
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -115,6 +121,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
         }
 
+        mediaScanView.setMessage(getString(R.string.info_scan_course_media_missing));
+        mediaScanView.setViewBelow(findViewById(R.id.view_course_sections));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize(false);
+
+        mediaScanView.scanMedia(Arrays.asList(course));
     }
 
     @Override
@@ -241,7 +257,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 return true;
 
             case android.R.id.home:
-                onBackPressed();
+                onUpButtonPressed();
                 return true;
 
             default:
@@ -259,6 +275,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     }
 
+    private void onUpButtonPressed() {
+        if (getIntent().hasExtra(EXTRA_FROM_WEBLINK)
+                && getIntent().getBooleanExtra(EXTRA_FROM_WEBLINK, false)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        finish();
+    }
+
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, () -> {
             CourseIndexActivity.this.initialize(false);
@@ -268,7 +294,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate) {
 
-        final ExpandableRecyclerView listView = findViewById(R.id.section_list);
         adapter = new CourseIndexRecyclerViewAdapter(this, sections, course);
         adapter.setOnChildItemClickedListener((section, position) -> {
             Activity act = sections.get(section).getActivities().get(position);
@@ -280,11 +305,11 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             fadeOutAnimation.setDuration(700);
             fadeOutAnimation.setFillAfter(true);
 
-            listView.setAlpha(0f);
+            recyclerCourseSections.setAlpha(0f);
             ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
             animator.addUpdateListener(valueAnimator -> {
-                listView.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
-                listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
+                recyclerCourseSections.setTranslationX((Float) valueAnimator.getAnimatedValue() * 80);
+                recyclerCourseSections.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
             });
             animator.setDuration(700);
             animator.start();
@@ -292,9 +317,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
         } else {
             loadingCourseView.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
+            recyclerCourseSections.setVisibility(View.VISIBLE);
         }
-        listView.setAdapter(adapter);
+        recyclerCourseSections.setAdapter(adapter);
 
     }
 
