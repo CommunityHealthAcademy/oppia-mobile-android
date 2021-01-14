@@ -7,8 +7,6 @@ import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
@@ -30,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import ly.count.android.sdk.Countly;
 
 public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
@@ -114,10 +114,10 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             out = new OutputStreamWriter(f);
             out.write(json);
         } catch (FileNotFoundException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "FileNotFoundException: ", e);
         } catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IO exception: ", e);
         } finally {
             if (out != null){

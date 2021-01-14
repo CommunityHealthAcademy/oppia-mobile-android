@@ -32,8 +32,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
@@ -45,6 +43,8 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.IOException;
 
 import androidx.preference.PreferenceManager;
+
+import ly.count.android.sdk.Countly;
 
 public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl, MediaPlayer.OnCompletionListener {
 
@@ -91,16 +91,16 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             player.setDataSource(this, Uri.parse(Storage.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IllegalArgumentException:", e);
         } catch (SecurityException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "SecurityException:", e);
         } catch (IllegalStateException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "ExceIllegalStateExceptionption:", e);
         } catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IOException:", e);
         }
     }
@@ -251,7 +251,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         } catch (IOException e) {
             //If the source is not available, close the activity
             Log.d(TAG, "IOException:", e);
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             player.release();
             this.finish();
 
@@ -259,7 +259,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             //If the player state was illegal, try to reset it again
             player.reset();
             player.prepareAsync();
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IllegalStateException:", e);
         }
 

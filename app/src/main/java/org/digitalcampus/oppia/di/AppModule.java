@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -32,6 +30,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ly.count.android.sdk.Countly;
 
 @Module
 public class AppModule {
@@ -68,7 +67,7 @@ public class AppModule {
         try {
             return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "User not found: ", e);
         }
         return new User();

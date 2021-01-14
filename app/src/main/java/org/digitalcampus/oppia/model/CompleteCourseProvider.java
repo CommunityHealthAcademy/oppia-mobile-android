@@ -3,8 +3,6 @@ package org.digitalcampus.oppia.model;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -14,6 +12,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.util.concurrent.Callable;
 
+import ly.count.android.sdk.Countly;
 
 
 public class CompleteCourseProvider {
@@ -26,7 +25,7 @@ public class CompleteCourseProvider {
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
             return cxr.getParsedCourse();
         } catch (InvalidXMLException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "Error loading course XML: ", e);
             showErrorMessage(ctx);
             return null;

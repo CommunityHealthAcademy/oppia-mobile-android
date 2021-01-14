@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import androidx.preference.PreferenceManager;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -21,6 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean, Void> {
 
@@ -89,7 +89,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                         courseRelatedMedia.add(m.getFilename());
                     }
                 } catch (InvalidXMLException ixmle) {
-                    Mint.logException(ixmle);
+                    Countly.sharedInstance().crashes().recordHandledException(ixmle);
                 }
 
                 courseBackup.setRelatedMedia(courseRelatedMedia);

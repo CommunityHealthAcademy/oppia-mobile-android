@@ -14,7 +14,6 @@ import androidx.work.WorkerParameters;
 import androidx.work.impl.utils.futures.SettableFuture;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
@@ -36,6 +35,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import ly.count.android.sdk.Countly;
 
 @SuppressLint("RestrictedApi")
 public class TrackerWorker extends ListenableWorker implements APIRequestFinishListener, APIRequestListener {
@@ -145,7 +146,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
             }
 
         } catch (JSONException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "JSON error: ", e);
         }
 

@@ -2,14 +2,14 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+
+import ly.count.android.sdk.Countly;
 
 public abstract class UserResponseQuestion extends QuizQuestion implements Serializable {
 
@@ -23,7 +23,7 @@ public abstract class UserResponseQuestion extends QuizQuestion implements Seria
                 jo.put(Quiz.JSON_PROPERTY_TEXT, "");
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
+                Countly.sharedInstance().crashes().recordHandledException(jsone);
             }
             return jo;
         }
@@ -35,7 +35,7 @@ public abstract class UserResponseQuestion extends QuizQuestion implements Seria
                 jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
-                Mint.logException(jsone);
+                Countly.sharedInstance().crashes().recordHandledException(jsone);
             }
         }
 

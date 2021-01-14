@@ -21,8 +21,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -35,6 +33,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import ly.count.android.sdk.Countly;
 
 public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
@@ -132,7 +132,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 Log.d(TAG, usersAdded + " users added");
             }
             catch (IOException e) {
-                Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "IOException: ", e);
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));

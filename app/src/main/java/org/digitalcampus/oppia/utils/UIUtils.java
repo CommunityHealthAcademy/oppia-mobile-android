@@ -39,8 +39,6 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
@@ -53,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+
+import ly.count.android.sdk.Countly;
 
 public class UIUtils {
 
@@ -238,7 +238,7 @@ public class UIUtils {
             try {
                 funct.call();
             } catch (Exception e) {
-                Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "Exception:", e);
             }
 
@@ -299,7 +299,7 @@ public class UIUtils {
                         try {
                             funct.call();
                         } catch (Exception e) {
-                            Mint.logException(e);
+                            Countly.sharedInstance().crashes().recordHandledException(e);
                             Log.d(TAG, "Exception:", e);
                         }
                     }).setTitle(ctx.getString(R.string.change_language))

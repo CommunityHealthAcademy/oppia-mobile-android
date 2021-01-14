@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -18,6 +16,7 @@ import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.Request;
 
 public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
@@ -52,7 +51,7 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "User not found: ", e);
         }
 

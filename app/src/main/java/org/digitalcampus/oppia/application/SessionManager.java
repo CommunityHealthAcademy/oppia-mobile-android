@@ -23,9 +23,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
-import com.splunk.mint.Mint;
-import com.splunk.mint.MintLogLevel;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -42,6 +39,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.preference.PreferenceManager;
+
+import ly.count.android.sdk.Countly;
 
 import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_PHONE_NO;
 
@@ -94,7 +93,7 @@ public class SessionManager {
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
-            Mint.logEvent(e.getMessage(), MintLogLevel.Info);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "User not found: ", e);
             return null;
         }
@@ -128,7 +127,6 @@ public class SessionManager {
 
         loadUserPrefs(ctx, username, editor);
         setUserApiKeyValid(user, true);
-        Mint.setUserIdentifier(username);
         editor.apply();
     }
 
@@ -144,7 +142,6 @@ public class SessionManager {
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");
-        Mint.setUserIdentifier("anon");
         editor.apply();
     }
 

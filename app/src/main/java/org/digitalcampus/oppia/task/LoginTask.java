@@ -20,8 +20,6 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
@@ -41,6 +39,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -112,7 +111,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             }
 
 		} catch(javax.net.ssl.SSLHandshakeException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "SSLHandshakeException: ", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
@@ -123,7 +122,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
-			Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "JSONException: ", e);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} 
@@ -197,7 +196,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             MetaDataUtils mu = new MetaDataUtils(ctx);
             mu.saveMetaData(metadata, prefs);
         } catch (JSONException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "JSONException: ", e);
         }
     }

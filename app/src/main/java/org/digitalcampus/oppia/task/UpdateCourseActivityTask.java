@@ -20,8 +20,6 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -38,6 +36,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -94,28 +93,28 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
                     payload.setResult(true);
 
                 } catch (InvalidXMLException e) {
-                    Mint.logException(e);
+                    Countly.sharedInstance().crashes().recordHandledException(e);
                     Log.d(TAG, "InvalidXMLException:", e);
                 }
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "InvalidXMLException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
-			Mint.logException(cpe);
+            Countly.sharedInstance().crashes().recordHandledException(cpe);
             Log.d(TAG, "SocketTimeoutException:", cpe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
-			Mint.logException(ioe);
+            Countly.sharedInstance().crashes().recordHandledException(ioe);
             Log.d(TAG, "IOException:", ioe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
-            Mint.logException(unfe);
+            Countly.sharedInstance().crashes().recordHandledException(unfe);
             Log.d(TAG, "UserNotFoundException:", unfe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));

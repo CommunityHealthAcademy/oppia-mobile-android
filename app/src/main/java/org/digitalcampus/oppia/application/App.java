@@ -87,7 +87,8 @@ public class App extends Application {
     public static final boolean METADATA_INCLUDE_GPS = BuildConfig.METADATA_INCLUDE_GPS;
 
     // general other settings
-    public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
+    public static final String COUNTLY_API_KEY = BuildConfig.COUNTLY_APP_KEY;
+    public static final String COUNTLY_SERVER_URL = BuildConfig.COUNTLY_SERVER_URL;
     public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
     public static final int USERNAME_MIN_CHARACTERS = 4;
     public static final int PHONENO_MIN_LENGTH = 8;

@@ -6,8 +6,6 @@ import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 
@@ -16,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class Storage {
 
@@ -139,7 +139,7 @@ public class Storage {
             try {
                 fileCreated = nomedia.createNewFile();
             } catch (IOException e) {
-                Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "IOException", e);
             }
             Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + dir.getAbsolutePath());

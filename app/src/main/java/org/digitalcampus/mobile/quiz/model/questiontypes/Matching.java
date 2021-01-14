@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -29,6 +27,8 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ly.count.android.sdk.Countly;
 
 public class Matching extends QuizQuestion implements Serializable {
 
@@ -117,7 +117,7 @@ public class Matching extends QuizQuestion implements Serializable {
             jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext.toString());
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Mint.logException(jsone);
+            Countly.sharedInstance().crashes().recordHandledException(jsone);
         }
         return jo;
     }

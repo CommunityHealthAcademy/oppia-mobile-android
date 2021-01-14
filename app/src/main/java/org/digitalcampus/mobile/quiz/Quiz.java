@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
@@ -44,6 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import ly.count.android.sdk.Countly;
 
 public class Quiz implements Serializable {
 
@@ -149,7 +149,7 @@ public class Quiz implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error loading quiz",jsone);
-            Mint.logException(jsone);
+            Countly.sharedInstance().crashes().recordHandledException(jsone);
             return false;
         }
         return true;
@@ -362,7 +362,7 @@ public class Quiz implements Serializable {
         try {
             return questions.get(this.currentq);
         } catch (IndexOutOfBoundsException e ){
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             throw new InvalidQuizException(e);
         }
     }
@@ -410,7 +410,7 @@ public class Quiz implements Serializable {
             json.put(JSON_PROPERTY_RESPONSES, responses);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json result object",jsone);
-            Mint.logException(jsone);
+            Countly.sharedInstance().crashes().recordHandledException(jsone);
         }
         return json;
     }

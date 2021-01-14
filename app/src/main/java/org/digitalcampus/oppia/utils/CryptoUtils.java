@@ -3,8 +3,6 @@ package org.digitalcampus.oppia.utils;
 import androidx.core.util.Pair;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -12,6 +10,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+
+import ly.count.android.sdk.Countly;
 
 public class CryptoUtils {
 
@@ -50,7 +50,7 @@ public class CryptoUtils {
             try {
                 return encryptWithAlgorithm(password, algorithm);
             } catch (NoSuchAlgorithmException e) {
-                Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "NoSuchAlgorithmException:", e);
             }
         }

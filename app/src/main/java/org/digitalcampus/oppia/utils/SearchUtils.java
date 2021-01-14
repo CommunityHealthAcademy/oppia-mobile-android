@@ -21,8 +21,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
@@ -36,6 +34,8 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import ly.count.android.sdk.Countly;
 
 public class SearchUtils {
 
@@ -66,7 +66,7 @@ public class SearchUtils {
                         fileContent.append(" ");
                         fileContent.append(FileUtils.readFile(url));
                     } catch (IOException e) {
-                        Mint.logException(e);
+                        Countly.sharedInstance().crashes().recordHandledException(e);
                         Log.d(TAG, "IOException:", e);
                     }
                 }
@@ -91,7 +91,7 @@ public class SearchUtils {
             indexAddCourse(ctx, course, cxr.getParsedCourse());
         } catch (InvalidXMLException e) {
             // Ignore course
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "InvalidXMLException:", e);
         }
 	}

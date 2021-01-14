@@ -33,8 +33,6 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseInstallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
@@ -58,6 +56,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+
+import ly.count.android.sdk.Countly;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
@@ -298,7 +298,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
-			Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "Error processing response: ", e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
@@ -356,7 +356,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				refreshCourseList();
 
 			} catch (JSONException e) {
-				Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "Error connecting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}

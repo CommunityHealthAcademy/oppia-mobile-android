@@ -18,7 +18,7 @@
 
 package org.digitalcampus.oppia.exception;
 
-import com.splunk.mint.Mint;
+import ly.count.android.sdk.Countly;
 
 public class InvalidXMLException extends Exception {
 
@@ -32,7 +32,7 @@ public class InvalidXMLException extends Exception {
 	public InvalidXMLException(Exception e, String message){
 		this(message);
 
-		Mint.logException(e);
+		Countly.sharedInstance().crashes().recordHandledException(e);
 		e.printStackTrace();
 	}
 

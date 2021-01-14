@@ -35,8 +35,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.App;
@@ -55,6 +53,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import ly.count.android.sdk.Countly;
 
 public class ResourceWidget extends BaseWidget {
 
@@ -208,7 +208,7 @@ public class ResourceWidget extends BaseWidget {
 				data.put("timetaken", timeTaken);
 				data.put("lang", prefLang);
 			} catch (JSONException e) {
-				Mint.logException(e);
+				Countly.sharedInstance().crashes().recordHandledException(e);
 				Log.d(TAG, "JSONException", e);
 			}
 
@@ -217,7 +217,7 @@ public class ResourceWidget extends BaseWidget {
 				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
-				Mint.logException(e);
+				Countly.sharedInstance().crashes().recordHandledException(e);
 				Log.d(TAG, "JSONException", e);
 			}
 

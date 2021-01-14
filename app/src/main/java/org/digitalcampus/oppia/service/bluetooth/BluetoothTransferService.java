@@ -12,8 +12,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -31,6 +29,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import ly.count.android.sdk.Countly;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -302,7 +302,7 @@ public class BluetoothTransferService extends Service {
             tasksDownloading.remove(trFile);
 
         } catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IO exception: ", e);
         }
     }
@@ -328,7 +328,7 @@ public class BluetoothTransferService extends Service {
             }
             outputStream.flush();
         }catch (IOException e){
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.e(TAG, e.getMessage(), e);
         }
 

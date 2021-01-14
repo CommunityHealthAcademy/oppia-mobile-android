@@ -23,8 +23,6 @@ import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -50,6 +48,8 @@ import java.util.Locale;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ly.count.android.sdk.Countly;
 
 public class QuizAttemptActivity extends AppActivity {
 
@@ -103,7 +103,7 @@ public class QuizAttemptActivity extends AppActivity {
 
 		} catch (InvalidXMLException ixmle) {
 			Log.d(TAG,"Invalid course xml file", ixmle);
-			Mint.logException(ixmle);
+			Countly.sharedInstance().crashes().recordHandledException(ixmle);
 		}
 
 		if (quizAttempt.getData() == null){
