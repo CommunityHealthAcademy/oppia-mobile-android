@@ -48,6 +48,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -66,6 +67,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import ly.count.android.sdk.Countly;
+import ly.count.android.sdk.CountlyConfig;
+import ly.count.android.sdk.DeviceId;
 
 import static org.digitalcampus.oppia.utils.resources.ExternalResourceOpener.EXTERNAL_APP_PACKAGE;
 
@@ -83,6 +87,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CountlyConfig config = new CountlyConfig(this.getApplication(), BuildConfig.COUNTLY_APP_KEY, BuildConfig.COUNTLY_SERVER_URL);
+        config.setLoggingEnabled(true);
+        config.setViewTracking(true);
+        config.enableCrashReporting();
+        config.setIdMode(DeviceId.Type.OPEN_UDID);
+        Countly.sharedInstance().init(config);
+
         initializeDaggerBase();
     }
 
@@ -95,6 +106,17 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         getAppComponent().inject(this);
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        Countly.sharedInstance().onStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        Countly.sharedInstance().onStop();
+        super.onStop();
+    }
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));

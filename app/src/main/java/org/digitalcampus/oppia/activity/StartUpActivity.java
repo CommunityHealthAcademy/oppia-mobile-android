@@ -30,9 +30,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -63,24 +61,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CountlyConfig config = new CountlyConfig(this.getApplication(), BuildConfig.COUNTLY_APP_KEY, BuildConfig.COUNTLY_SERVER_URL);
-        config.setLoggingEnabled(true);
-        config.setViewTracking(true);
-        config.enableCrashReporting();
-        config.setIdMode(DeviceId.Type.OPEN_UDID);
-        Countly.sharedInstance().init(config);
+
 
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = SessionManager.getUsername(this);
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        Countly.sharedInstance().onStart(this);
     }
 
     @Override
