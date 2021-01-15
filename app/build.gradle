@@ -245,7 +245,7 @@ dependencies {
 
 //    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 
-    implementation 'ly.count.android:sdk:20.11.0'
+    implementation 'ly.count.android:sdk:20.11.3'
 }
 
 
