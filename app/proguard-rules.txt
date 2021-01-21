@@ -123,8 +123,12 @@
 -keep interface org.joda.time.** { *; }
 
 ## Splunk Mint
--keep class com.splunk.** { *; }
--dontwarn com.bugsense.trace.BugSense
+# -keep class com.splunk.** { *; }
+# -dontwarn com.bugsense.trace.BugSense
+
+## Count.ly
+-keep class org.openudid.** { *; }
+-keep class ly.count.android.sdk.** { *; }
 
 ## Square Picasso specific rules ##
 ## https://square.github.io/picasso/ ##

@@ -29,8 +29,6 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
@@ -70,6 +68,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import ly.count.android.sdk.Countly;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -1194,7 +1194,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
                 } catch (InvalidXMLException ixmle) {
                     Log.d(TAG, "Invalid course xml file", ixmle);
-                    Mint.logException(ixmle);
+                    Countly.sharedInstance().crashes().recordHandledException(ixmle);
                 }
             } else {
                 qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
@@ -1664,7 +1664,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 content = json.toString();
             } catch (JSONException jsone) {
-                Mint.logException(jsone);
+                Countly.sharedInstance().crashes().recordHandledException(jsone);
                 Log.d(TAG, "error creating unsent trackers", jsone);
             }
 
@@ -1709,7 +1709,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 content = json.toString();
             } catch (JSONException jsone) {
-                Mint.logException(jsone);
+                Countly.sharedInstance().crashes().recordHandledException(jsone);
                 Log.d(TAG, "error creating unexported trackers", jsone);
             }
 
@@ -2090,7 +2090,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         results.add(result);
                     } catch (InvalidXMLException ixmle) {
                         Log.d(TAG, "Invalid course xml file", ixmle);
-                        Mint.logException(ixmle);
+                        Countly.sharedInstance().crashes().recordHandledException(ixmle);
                     }
                 } else {
                     result.setSection(parsed.getSection(sectionOrderId));

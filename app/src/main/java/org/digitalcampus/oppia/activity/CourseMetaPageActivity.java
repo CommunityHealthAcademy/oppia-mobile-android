@@ -24,8 +24,6 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
@@ -35,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class CourseMetaPageActivity extends AppActivity {
 
@@ -82,7 +82,7 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</html>";
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
 		} catch (IOException e) {
-			Mint.logException(e);
+			Countly.sharedInstance().crashes().recordHandledException(e);
 			Log.d(TAG, "IOException: ", e);
 			wv.loadUrl("file://" + url);
 		}

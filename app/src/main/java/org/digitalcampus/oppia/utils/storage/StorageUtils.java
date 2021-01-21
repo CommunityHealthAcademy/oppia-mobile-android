@@ -22,8 +22,6 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 
@@ -35,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import ly.count.android.sdk.Countly;
 
 
 public class StorageUtils {
@@ -94,7 +94,7 @@ public class StorageUtils {
             String content = new String(buffer, StandardCharsets.UTF_8);
             return content;
         } catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             return null;
         }
     }

@@ -1,7 +1,5 @@
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import com.splunk.mint.Mint;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -9,6 +7,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+
+import ly.count.android.sdk.Countly;
 
 class XMLSecurityHelper {
 
@@ -54,7 +54,7 @@ class XMLSecurityHelper {
         try {
             return parserFactory.newSAXParser().getXMLReader();
         } catch (ParserConfigurationException|SAXException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             return null;
         }
 

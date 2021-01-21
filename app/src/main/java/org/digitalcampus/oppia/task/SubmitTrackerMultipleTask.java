@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -48,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -146,7 +145,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             }
 
         } catch (IOException | UserNotFoundException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             payload.setResult(false);
         }
 
@@ -203,15 +202,15 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             return false;
         } catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             p.setResultResponse(ctx.getString(R.string.error_connection));
             return false;
         } catch (JSONException e) {
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             return false;
         }
     }

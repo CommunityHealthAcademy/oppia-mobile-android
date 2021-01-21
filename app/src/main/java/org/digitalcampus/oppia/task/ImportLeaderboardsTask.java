@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -16,6 +14,8 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+
+import ly.count.android.sdk.Countly;
 
 public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
@@ -53,7 +53,7 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
 
                     } catch (IOException | WrongServerException | ParseException | JSONException e) {
-                        Mint.logException(e);
+                        Countly.sharedInstance().crashes().recordHandledException(e);
                         Log.d(TAG, "Error: ", e);
                         payload.setResult(false);
                     }

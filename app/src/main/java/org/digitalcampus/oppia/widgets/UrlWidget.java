@@ -26,8 +26,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -42,6 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+
+import ly.count.android.sdk.Countly;
 
 public class UrlWidget extends BaseWidget {
 
@@ -143,10 +143,10 @@ public class UrlWidget extends BaseWidget {
 			}
 		} catch (JSONException jsone) {
 			Log.d(TAG,"Error generating json for url widget", jsone);
-			Mint.logException(jsone);
+			Countly.sharedInstance().crashes().recordHandledException(jsone);
 		} catch (NullPointerException npe){
 			Log.d(TAG,"Null pointer in generating json for url widget", npe);
-			Mint.logException(npe);
+			Countly.sharedInstance().crashes().recordHandledException(npe);
 		}
 	}
 

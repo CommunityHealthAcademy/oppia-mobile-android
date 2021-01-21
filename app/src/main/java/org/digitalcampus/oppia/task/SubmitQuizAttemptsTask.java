@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -36,6 +34,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -95,7 +94,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				Mint.logException(e);
+				Countly.sharedInstance().crashes().recordHandledException(e);
 				Log.d(TAG, "JSONException:", e);
 			} 
 		}

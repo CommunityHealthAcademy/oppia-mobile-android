@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -23,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class GamificationService  extends IntentService {
 
@@ -197,7 +197,7 @@ public class GamificationService  extends IntentService {
                 }
             }
         } catch (JSONException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "JSON error: ", e);
         }
     }

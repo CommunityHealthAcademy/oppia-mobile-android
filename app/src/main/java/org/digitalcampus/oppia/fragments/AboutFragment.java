@@ -28,13 +28,13 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class AboutFragment extends AppFragment {
 
@@ -73,7 +73,7 @@ public class AboutFragment extends AppFragment {
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			Mint.logException(e);
+			Countly.sharedInstance().crashes().recordHandledException(e);
 			Log.d(TAG, "Error getting version name: ", e);
 		}
 	}

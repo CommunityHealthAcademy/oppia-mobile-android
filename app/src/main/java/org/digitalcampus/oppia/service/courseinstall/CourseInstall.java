@@ -22,8 +22,6 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
@@ -41,6 +39,8 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+
+import ly.count.android.sdk.Countly;
 
 public class CourseInstall {
 
@@ -78,7 +78,7 @@ public class CourseInstall {
             courseDir = tempdir.list()[0]; // use this to get the course name
         } catch (ArrayIndexOutOfBoundsException aioobe) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            Mint.logException(aioobe);
+            Countly.sharedInstance().crashes().recordHandledException(aioobe);
             Log.d(TAG, STR_ERROR, aioobe);
             listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
@@ -93,7 +93,7 @@ public class CourseInstall {
             courseTrackerXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_TRACKER_XML;
         } catch (ArrayIndexOutOfBoundsException aioobe){
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            Mint.logException(aioobe);
+            Countly.sharedInstance().crashes().recordHandledException(aioobe);
             Log.d(TAG, STR_ERROR, aioobe);
             listener.onError(ctx.getString(R.string.error_media_download));
             return;
@@ -147,7 +147,7 @@ public class CourseInstall {
                 org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName().toLowerCase(Locale.US)));
                 success = true;
             } catch (IOException e) {
-                Mint.logException(e);
+                Countly.sharedInstance().crashes().recordHandledException(e);
                 Log.d(TAG, "Error copying course: ", e);
                 FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
                 listener.onFail(ctx.getString(R.string.error_installing_course, title));

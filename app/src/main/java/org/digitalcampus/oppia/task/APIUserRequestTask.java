@@ -20,8 +20,6 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -29,6 +27,7 @@ import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import java.io.IOException;
 
+import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -70,7 +69,7 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
             }
 
 		}  catch (IOException e) {
-            Mint.logException(e);
+            Countly.sharedInstance().crashes().recordHandledException(e);
             Log.d(TAG, "IO exception", e);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));

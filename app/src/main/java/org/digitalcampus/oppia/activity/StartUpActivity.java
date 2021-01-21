@@ -25,16 +25,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -51,6 +47,10 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 
+import ly.count.android.sdk.Countly;
+import ly.count.android.sdk.CountlyConfig;
+import ly.count.android.sdk.DeviceId;
+
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
@@ -60,14 +60,14 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mint.disableNetworkMonitoring();
-        Mint.initAndStartSession(this, App.MINT_API_KEY);
+
+
+
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = SessionManager.getUsername(this);
-        Mint.setUserIdentifier(username.equals("") ? "anon" : username);
     }
 
     @Override
