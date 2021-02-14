@@ -23,9 +23,6 @@ import okhttp3.Response;
 public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Object, Payload> {
 
     private SubmitListener listener;
-    public UpdateLeaderboardFromServerTask(Context ctx) {
-        super(ctx);
-    }
 
     public UpdateLeaderboardFromServerTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
@@ -62,8 +59,14 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
                 }
             }
             else{
+                if (response.code() == 401){
+                    invalidateApiKey(payload);
+                }
                 if (response.code() == 404){
                     payload.setResultResponse("Your server version is old and does not support leaderboard export.");
+                }
+                else{
+
                 }
                 payload.setResult(false);
                 response.body().close();

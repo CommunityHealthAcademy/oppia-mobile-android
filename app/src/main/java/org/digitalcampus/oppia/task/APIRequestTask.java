@@ -72,6 +72,18 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         }
     }
 
+    protected void invalidateApiKey(Payload payload){
+        // If the server returns a 401 error it means an invalid APIkey
+        try {
+            User u = DbHelper.getInstance(ctx).getUser(SessionManager.getUsername(ctx));
+            SessionManager.setUserApiKeyValid(u, false);
+        } catch (UserNotFoundException e) {
+            Countly.sharedInstance().crashes().recordHandledException(e);
+        }
+        payload.setResult(false);
+        payload.setResultResponse(ctx.getString(org.digitalcampus.mobile.learning.R.string.error_apikey_expired ));
+    }
+
     public void setAPIRequestFinishListener(APIRequestFinishListener listener, String nameRequest) {
         this.nameRequest = nameRequest;
         this.listener = listener;
