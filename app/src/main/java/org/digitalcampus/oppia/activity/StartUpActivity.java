@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,12 +26,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
+
+import org.digitalcampus.oppia.analytics.Analytics;
+import org.digitalcampus.oppia.analytics.BaseAnalytics;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -48,10 +57,6 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 
-import ly.count.android.sdk.Countly;
-import ly.count.android.sdk.CountlyConfig;
-import ly.count.android.sdk.DeviceId;
-
 public class StartUpActivity extends Activity implements UpgradeListener, InstallCourseListener {
 
     public static final String TAG = StartUpActivity.class.getSimpleName();
@@ -62,13 +67,11 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = SessionManager.getUsername(this);
+        Analytics.startTrackingIfEnabled(this);
     }
 
     @Override
@@ -107,6 +110,33 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
                         : WelcomeActivity.class));
 
         finish();
+    }
+
+    private void showAnalyticsRationaleIfNeeded(){
+        if (!Analytics.shouldShowOptOutRationale(this)){
+            endStartUpScreen();
+            return;
+        }
+
+        ViewGroup container = findViewById(R.id.permissions_explanation);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container.removeAllViews();
+        View explanation = layoutInflater.inflate(R.layout.view_analytics_optin, container);
+        container.setVisibility(View.VISIBLE);
+
+        Button continueBtn = explanation.findViewById(R.id.continue_button);
+        continueBtn.setOnClickListener(view -> {
+            Analytics.optOutRationaleShown(this);
+            CheckBox analyticsCheck = explanation.findViewById(R.id.analytics_checkbox);
+            CheckBox bugreportCheck = explanation.findViewById(R.id.bugreport_checkbox);
+            if (analyticsCheck.isChecked()){
+                Analytics.enableTracking(this);
+            }
+            if (bugreportCheck.isChecked()){
+                Analytics.enableBugReport(this);
+            }
+            endStartUpScreen();
+        });
     }
 
     private void installCourses() {
@@ -178,7 +208,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, Instal
 
     private void importLeaderboard() {
         ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(StartUpActivity.this);
-        imTask.setListener((success, message) -> endStartUpScreen());
+        imTask.setListener((success, message) -> showAnalyticsRationaleIfNeeded());
         imTask.execute(new Payload());
     }
 }

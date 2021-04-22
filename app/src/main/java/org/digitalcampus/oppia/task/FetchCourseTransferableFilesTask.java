@@ -3,9 +3,10 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import androidx.preference.PreferenceManager;
+
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Course;
@@ -20,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ly.count.android.sdk.Countly;
+import androidx.preference.PreferenceManager;
+
 
 public class FetchCourseTransferableFilesTask extends AsyncTask<Void, Boolean, Void> {
 
@@ -89,7 +91,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Void, Boolean, V
                         courseRelatedMedia.add(m.getFilename());
                     }
                 } catch (InvalidXMLException ixmle) {
-                    Countly.sharedInstance().crashes().recordHandledException(ixmle);
+                    Analytics.logException(ixmle);
                 }
 
                 courseBackup.setRelatedMedia(courseRelatedMedia);

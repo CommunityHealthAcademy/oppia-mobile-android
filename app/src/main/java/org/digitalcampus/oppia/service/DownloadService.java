@@ -25,6 +25,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -44,7 +45,6 @@ import java.util.List;
 
 import androidx.core.app.NotificationCompat;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -244,10 +244,10 @@ public class DownloadService extends FileIntentService {
             }
 
         } catch (MalformedURLException|NoSuchAlgorithmException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             logAndNotifyError(fileUrl, e);
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
         } finally {

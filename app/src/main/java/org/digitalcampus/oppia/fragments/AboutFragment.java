@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.fragments;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +29,12 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.Locale;
 
-import ly.count.android.sdk.Countly;
+import androidx.preference.PreferenceManager;
 
 public class AboutFragment extends AppFragment {
 
@@ -73,7 +73,7 @@ public class AboutFragment extends AppFragment {
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			Countly.sharedInstance().crashes().recordHandledException(e);
+			Analytics.logException(e);
 			Log.d(TAG, "Error getting version name: ", e);
 		}
 	}

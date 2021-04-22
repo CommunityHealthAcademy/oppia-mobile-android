@@ -3,11 +3,11 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.model.CustomField;
@@ -29,7 +29,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
+import androidx.preference.PreferenceManager;
+
 
 public class ExportActivityTask extends AsyncTask<Void, Integer, String> {
 
@@ -114,10 +115,10 @@ public class ExportActivityTask extends AsyncTask<Void, Integer, String> {
             out = new OutputStreamWriter(f);
             out.write(json);
         } catch (FileNotFoundException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "FileNotFoundException: ", e);
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IO exception: ", e);
         } finally {
             if (out != null){

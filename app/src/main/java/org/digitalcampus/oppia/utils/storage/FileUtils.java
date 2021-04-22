@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 
 import java.io.BufferedInputStream;
@@ -39,7 +40,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import ly.count.android.sdk.Countly;
 
 public class FileUtils {
 
@@ -112,7 +112,7 @@ public class FileUtils {
             }
 
         } catch (Exception e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
         }
@@ -152,7 +152,7 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
         }
@@ -325,7 +325,7 @@ public class FileUtils {
         try {
             org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Moving file failed", e);
             if (deleteOnError) {
                 FileUtils.deleteFile(file);

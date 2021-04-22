@@ -20,6 +20,7 @@ package org.digitalcampus.mobile.quiz.model;
 import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,8 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ly.count.android.sdk.Countly;
 
 public class QuizQuestion implements Serializable {
 
@@ -151,7 +150,7 @@ public class QuizQuestion implements Serializable {
             jo.put(Quiz.JSON_PROPERTY_TEXT, null);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error creating json object", jsone);
-            Countly.sharedInstance().crashes().recordHandledException(jsone);
+            Analytics.logException(jsone);
         }
         return jo;
     }

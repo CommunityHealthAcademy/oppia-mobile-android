@@ -18,13 +18,12 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.Entity;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
@@ -38,7 +37,6 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -97,28 +95,28 @@ public class UpdateCourseActivityTask extends APIRequestTask<Course, DownloadPro
                     result.setSuccess(true);
 
                 } catch (InvalidXMLException e) {
-                    Countly.sharedInstance().crashes().recordHandledException(e);
+                    Analytics.logException(e);
                     Log.d(TAG, "InvalidXMLException:", e);
                 }
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "InvalidXMLException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
-            Countly.sharedInstance().crashes().recordHandledException(cpe);
+			Analytics.logException(cpe);
             Log.d(TAG, "SocketTimeoutException:", cpe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
-            Countly.sharedInstance().crashes().recordHandledException(ioe);
+			Analytics.logException(ioe);
             Log.d(TAG, "IOException:", ioe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
-            Countly.sharedInstance().crashes().recordHandledException(unfe);
+            Analytics.logException(unfe);
             Log.d(TAG, "UserNotFoundException:", unfe);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));

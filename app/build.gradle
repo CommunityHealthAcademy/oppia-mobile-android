@@ -8,6 +8,7 @@ apply plugin: "com.hiya.jacoco-android"
 repositories {
     maven { url "https://jitpack.io" }
     maven { url  "http://dl.bintray.com/countly/maven" }
+    maven { url "https://mint.splunk.com/gradle/" }
 }
 
 def version_code = 86
@@ -66,6 +67,7 @@ android {
             //Define all the constant values that depend on the config properties
             buildConfigField "String", "COUNTLY_APP_KEY", "\"" + runtimeProps['COUNTLY_APP_KEY'] + "\""
             buildConfigField "String", "COUNTLY_SERVER_URL", "\"" + runtimeProps['COUNTLY_SERVER_URL'] + "\""
+            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] + "\""
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_EXPORT", runtimeProps['ADMIN_PROTECT_ACTIVITY_EXPORT']
@@ -192,11 +194,13 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
+    implementation 'com.splunk.mint:mint:5.0.0'
     implementation 'io.github.inflationx:calligraphy3:3.1.1'
     implementation 'io.github.inflationx:viewpump:2.0.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
+    implementation 'com.hbb20:ccp:2.5.1' //Phone code picker
 
     //Dagger Dependencies
     implementation "com.google.dagger:dagger:$daggerVersion"

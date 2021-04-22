@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
@@ -54,7 +55,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import ly.count.android.sdk.Countly;
 
 public class ResourceWidget extends BaseWidget {
 
@@ -208,7 +208,7 @@ public class ResourceWidget extends BaseWidget {
 				data.put("timetaken", timeTaken);
 				data.put("lang", prefLang);
 			} catch (JSONException e) {
-				Countly.sharedInstance().crashes().recordHandledException(e);
+				Analytics.logException(e);
 				Log.d(TAG, "JSONException", e);
 			}
 
@@ -217,7 +217,7 @@ public class ResourceWidget extends BaseWidget {
 				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
-				Countly.sharedInstance().crashes().recordHandledException(e);
+				Analytics.logException(e);
 				Log.d(TAG, "JSONException", e);
 			}
 

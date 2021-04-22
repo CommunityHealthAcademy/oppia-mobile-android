@@ -23,11 +23,12 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
@@ -45,11 +46,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -150,7 +151,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
             }
 
         } catch (IOException | UserNotFoundException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             result.setSuccess(false);
         }
 
@@ -207,15 +208,18 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Void, Integer, Ent
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
+            return false;
+        } catch (ConnectException e) {
+            result.setResultMessage(ctx.getString(R.string.error_connection_timeout));
             return false;
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             result.setResultMessage(ctx.getString(R.string.error_connection));
             return false;
         } catch (JSONException e) {
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             return false;
         }
     }

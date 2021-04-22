@@ -21,18 +21,14 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.database.DbHelper;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import java.io.IOException;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -82,7 +78,7 @@ public class APIUserRequestTask extends APIRequestTask<String, Object, BasicResu
             }
 
 		}  catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IO exception", e);
 			result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection));

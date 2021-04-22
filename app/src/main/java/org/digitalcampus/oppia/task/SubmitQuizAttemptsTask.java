@@ -23,10 +23,11 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -36,7 +37,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -99,7 +99,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<List<QuizAttempt>, Ob
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				result.setSuccess(false);
-				Countly.sharedInstance().crashes().recordHandledException(e);
+				Analytics.logException(e);
 				Log.d(TAG, "JSONException:", e);
 			} 
 		}

@@ -23,10 +23,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -41,7 +40,7 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import ly.count.android.sdk.Countly;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TagSelectActivity extends AppActivity implements APIRequestListener {
 
@@ -120,7 +119,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
             this.json = new JSONObject(savedInstanceState.getString("json"));
         } catch (Exception e) {
-			Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Error restoring saved state: ", e);
         }
 	}
@@ -155,7 +154,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
             findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
-			Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Error refreshing tag list: ", e);
 		}
 		
@@ -175,7 +174,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				json = new JSONObject(response.getResultResponse());
 				refreshTagList();
 			} catch (JSONException e) {
-				Countly.sharedInstance().crashes().recordHandledException(e);
+				Analytics.logException(e);
                 Log.d(TAG, "Error conencting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}

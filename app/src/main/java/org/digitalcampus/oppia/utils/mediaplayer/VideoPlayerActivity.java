@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -44,7 +45,6 @@ import java.io.IOException;
 
 import androidx.preference.PreferenceManager;
 
-import ly.count.android.sdk.Countly;
 
 public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl, MediaPlayer.OnCompletionListener {
 
@@ -91,16 +91,16 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             player.setDataSource(this, Uri.parse(Storage.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IllegalArgumentException:", e);
         } catch (SecurityException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "SecurityException:", e);
         } catch (IllegalStateException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "ExceIllegalStateExceptionption:", e);
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IOException:", e);
         }
     }
@@ -252,7 +252,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         } catch (IOException e) {
             //If the source is not available, close the activity
             Log.d(TAG, "IOException:", e);
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             player.release();
             this.finish();
 
@@ -260,7 +260,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             //If the player state was illegal, try to reset it again
             player.reset();
             player.prepareAsync();
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "IllegalStateException:", e);
         }
 

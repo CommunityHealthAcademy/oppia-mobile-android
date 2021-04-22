@@ -18,7 +18,7 @@
 
 package org.digitalcampus.oppia.exception;
 
-import ly.count.android.sdk.Countly;
+import org.digitalcampus.oppia.analytics.Analytics;
 
 public class InvalidXMLException extends Exception {
 
@@ -32,7 +32,7 @@ public class InvalidXMLException extends Exception {
 	public InvalidXMLException(Exception e, String message){
 		this(message);
 
-		Countly.sharedInstance().crashes().recordHandledException(e);
+		Analytics.logException(e);
 		e.printStackTrace();
 	}
 

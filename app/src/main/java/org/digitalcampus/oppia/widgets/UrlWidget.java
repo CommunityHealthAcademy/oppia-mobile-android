@@ -29,6 +29,7 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
@@ -40,8 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-
-import ly.count.android.sdk.Countly;
 
 public class UrlWidget extends BaseWidget {
 
@@ -143,10 +142,10 @@ public class UrlWidget extends BaseWidget {
 			}
 		} catch (JSONException jsone) {
 			Log.d(TAG,"Error generating json for url widget", jsone);
-			Countly.sharedInstance().crashes().recordHandledException(jsone);
+			Analytics.logException(jsone);
 		} catch (NullPointerException npe){
 			Log.d(TAG,"Null pointer in generating json for url widget", npe);
-			Countly.sharedInstance().crashes().recordHandledException(npe);
+			Analytics.logException(npe);
 		}
 	}
 

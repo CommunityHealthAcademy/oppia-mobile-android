@@ -21,10 +21,10 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.count.android.sdk.Countly;
 
 public class Description extends QuizQuestion {
 
@@ -40,7 +40,7 @@ public class Description extends QuizQuestion {
             jo.put(Quiz.JSON_PROPERTY_TEXT, null);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Countly.sharedInstance().crashes().recordHandledException(jsone);
+            Analytics.logException(jsone);
         }
         return jo;
     }

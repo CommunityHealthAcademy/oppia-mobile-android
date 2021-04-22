@@ -1,8 +1,8 @@
 package org.digitalcampus.oppia.utils;
 
-import androidx.core.util.Pair;
 import android.util.Log;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
+import androidx.core.util.Pair;
 
 public class CryptoUtils {
 
@@ -50,7 +50,7 @@ public class CryptoUtils {
             try {
                 return encryptWithAlgorithm(password, algorithm);
             } catch (NoSuchAlgorithmException e) {
-                Countly.sharedInstance().crashes().recordHandledException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "NoSuchAlgorithmException:", e);
             }
         }

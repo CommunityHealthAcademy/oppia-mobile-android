@@ -21,6 +21,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
@@ -30,7 +31,6 @@ import org.digitalcampus.oppia.model.Media;
 
 import java.util.Locale;
 
-import ly.count.android.sdk.Countly;
 
 
 /* This holds all the rules for allocating points */
@@ -125,7 +125,7 @@ public class GamificationEngine {
 
             } catch (GamificationEventNotFound genf){
                 Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
-                Countly.sharedInstance().crashes().recordHandledException(genf);
+                Analytics.logException(genf);
             }
 
         } else if (db.isQuizFirstAttemptToday(activity.getDigest())){
@@ -133,7 +133,7 @@ public class GamificationEngine {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_ATTEMPT).getPoints();
             } catch (GamificationEventNotFound genf){
                 Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
-                Countly.sharedInstance().crashes().recordHandledException(genf);
+                Analytics.logException(genf);
             }
         } else {
             Log.d(TAG,"Not first attempt, nor first attempt today");
@@ -151,7 +151,7 @@ public class GamificationEngine {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED).getPoints();
             } catch (GamificationEventNotFound genf) {
                 Log.d(TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_ACTIVITY_COMPLETED, genf);
-                Countly.sharedInstance().crashes().recordHandledException(genf);
+                Analytics.logException(genf);
             }
         }
         return new GamificationEvent(Gamification.EVENT_NAME_ACTIVITY_COMPLETED, totalPoints);
@@ -195,7 +195,7 @@ public class GamificationEngine {
 
             } catch (GamificationEventNotFound genf) {
                 Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
-                Countly.sharedInstance().crashes().recordHandledException(genf);
+                Analytics.logException(genf);
             }
         }
         return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);
@@ -237,7 +237,7 @@ public class GamificationEngine {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_FEEDBACK_COMPLETED).getPoints();
             } catch (GamificationEventNotFound genf) {
                 Log.d(TAG, LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
-                Countly.sharedInstance().crashes().recordHandledException(genf);
+                Analytics.logException(genf);
             }
         }
         else {

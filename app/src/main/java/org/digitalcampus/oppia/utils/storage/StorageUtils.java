@@ -20,9 +20,9 @@ package org.digitalcampus.oppia.utils.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 
 import java.io.File;
@@ -31,11 +31,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import ly.count.android.sdk.Countly;
-
 
 public class StorageUtils {
 
@@ -94,7 +89,7 @@ public class StorageUtils {
             String content = new String(buffer, StandardCharsets.UTF_8);
             return content;
         } catch (IOException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             return null;
         }
     }

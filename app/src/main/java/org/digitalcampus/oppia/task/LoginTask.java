@@ -21,10 +21,11 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
 import org.digitalcampus.oppia.model.CustomField;
@@ -40,7 +41,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -114,7 +114,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             }
 
 		} catch(javax.net.ssl.SSLHandshakeException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "SSLHandshakeException: ", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
@@ -125,7 +125,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+			Analytics.logException(e);
             Log.d(TAG, "JSONException: ", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_processing_response));
@@ -200,7 +200,7 @@ public class LoginTask extends APIRequestTask<User, Object, EntityResult<User>> 
             MetaDataUtils mu = new MetaDataUtils(ctx);
             mu.saveMetaData(metadata, prefs);
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSONException: ", e);
         }
     }

@@ -5,14 +5,13 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.util.concurrent.Callable;
-
-import ly.count.android.sdk.Countly;
 
 
 public class CompleteCourseProvider {
@@ -25,7 +24,7 @@ public class CompleteCourseProvider {
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
             return cxr.getParsedCourse();
         } catch (InvalidXMLException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "Error loading course XML: ", e);
             showErrorMessage(ctx);
             return null;

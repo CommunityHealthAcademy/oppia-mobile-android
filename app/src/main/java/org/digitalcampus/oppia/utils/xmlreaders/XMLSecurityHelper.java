@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.utils.xmlreaders;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -54,7 +55,7 @@ class XMLSecurityHelper {
         try {
             return parserFactory.newSAXParser().getXMLReader();
         } catch (ParserConfigurationException|SAXException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             return null;
         }
 

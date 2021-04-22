@@ -18,12 +18,10 @@
 package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -40,8 +38,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import ly.count.android.sdk.Countly;
 
 public class CourseXMLReader {
 
@@ -80,7 +76,7 @@ public class CourseXMLReader {
                     parseComplete();
 
             } catch (Exception e) {
-                Countly.sharedInstance().crashes().recordHandledException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "Error loading course", e);
                 throw new InvalidXMLException(e, ctx.getResources().getString(R.string.error_reading_xml));
             }

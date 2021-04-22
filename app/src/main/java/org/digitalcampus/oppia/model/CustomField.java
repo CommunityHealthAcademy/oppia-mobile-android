@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.model;
 import android.content.Context;
 import android.text.TextUtils;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +14,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
-import ly.count.android.sdk.Countly;
 
 public class CustomField {
 
@@ -170,7 +170,7 @@ public class CustomField {
             }
 
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
         }
     }
 
@@ -202,7 +202,7 @@ public class CustomField {
                 steps.add(step);
             }
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
         }
         return steps;
     }
@@ -250,7 +250,7 @@ public class CustomField {
             db.insertOrUpdateCustomFieldCollection(collectionName, collectionItems);
 
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
         }
 
     }

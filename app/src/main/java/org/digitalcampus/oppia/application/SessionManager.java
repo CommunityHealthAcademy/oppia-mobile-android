@@ -23,12 +23,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -38,8 +38,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.preference.PreferenceManager;
-
-import ly.count.android.sdk.Countly;
 
 import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_PHONE_NO;
 
@@ -92,11 +90,10 @@ public class SessionManager {
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "User not found: ", e);
             return null;
         }
-
     }
 
     public static String getUsername(Context ctx) {
@@ -126,6 +123,7 @@ public class SessionManager {
 
         loadUserPrefs(ctx, username, editor);
         setUserApiKeyValid(user, true);
+        Analytics.setUserId(username);
         editor.apply();
     }
 
@@ -141,6 +139,7 @@ public class SessionManager {
 
         //Logout the user (unregister from Preferences)
         editor.putString(PrefsActivity.PREF_USER_NAME, "");
+        Analytics.setUserId("");
         editor.apply();
     }
 

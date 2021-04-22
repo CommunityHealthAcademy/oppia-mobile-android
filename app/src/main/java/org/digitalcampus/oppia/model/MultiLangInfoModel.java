@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import ly.count.android.sdk.Countly;
 
 
 public class MultiLangInfoModel implements Serializable {
@@ -121,7 +120,7 @@ public class MultiLangInfoModel implements Serializable {
             try {
                 obj.put(l.getLanguage(), l.getContent());
             } catch (JSONException e) {
-                Countly.sharedInstance().crashes().recordHandledException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "JSON error: ", e);
             }
             array.put(obj);
@@ -147,10 +146,10 @@ public class MultiLangInfoModel implements Serializable {
                 }
             }
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSON error: ", e);
         } catch (NullPointerException npe){
-            Countly.sharedInstance().crashes().recordHandledException(npe);
+            Analytics.logException(npe);
             Log.d(TAG, "Null pointer error: ", npe);
         }
     }

@@ -19,16 +19,15 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import java.io.Serializable;
-import java.util.Iterator;
-
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ly.count.android.sdk.Countly;
+import java.io.Serializable;
+import java.util.Iterator;
 
 public class Matching extends QuizQuestion implements Serializable {
 
@@ -117,7 +116,7 @@ public class Matching extends QuizQuestion implements Serializable {
             jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext.toString());
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Countly.sharedInstance().crashes().recordHandledException(jsone);
+            Analytics.logException(jsone);
         }
         return jo;
     }

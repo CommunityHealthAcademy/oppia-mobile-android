@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -15,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 
-import ly.count.android.sdk.Countly;
 
 public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
@@ -53,7 +53,7 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
 
                     } catch (IOException | WrongServerException | ParseException | JSONException e) {
-                        Countly.sharedInstance().crashes().recordHandledException(e);
+                        Analytics.logException(e);
                         Log.d(TAG, "Error: ", e);
                         payload.setResult(false);
                     }

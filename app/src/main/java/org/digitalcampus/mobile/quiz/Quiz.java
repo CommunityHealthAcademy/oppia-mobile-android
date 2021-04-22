@@ -28,6 +28,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
@@ -42,8 +43,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
-import ly.count.android.sdk.Countly;
 
 public class Quiz implements Serializable {
 
@@ -149,7 +148,7 @@ public class Quiz implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error loading quiz",jsone);
-            Countly.sharedInstance().crashes().recordHandledException(jsone);
+            Analytics.logException(jsone);
             return false;
         }
         return true;
@@ -362,7 +361,7 @@ public class Quiz implements Serializable {
         try {
             return questions.get(this.currentq);
         } catch (IndexOutOfBoundsException e ){
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             throw new InvalidQuizException(e);
         }
     }
@@ -410,7 +409,7 @@ public class Quiz implements Serializable {
             json.put(JSON_PROPERTY_RESPONSES, responses);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json result object",jsone);
-            Countly.sharedInstance().crashes().recordHandledException(jsone);
+            Analytics.logException(jsone);
         }
         return json;
     }

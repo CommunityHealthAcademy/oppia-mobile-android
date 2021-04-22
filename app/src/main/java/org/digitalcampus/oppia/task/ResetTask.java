@@ -21,6 +21,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.SubmitEntityListener;
@@ -32,7 +33,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -85,7 +85,7 @@ public class ResetTask extends APIRequestTask<User, Object, EntityResult<User>> 
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
-			Countly.sharedInstance().crashes().recordHandledException(e);
+			Analytics.logException(e);
 			Log.d(TAG, "JSONException:", e);
 			result.setSuccess(false);
 			result.setResultMessage(ctx.getString(R.string.error_processing_response));

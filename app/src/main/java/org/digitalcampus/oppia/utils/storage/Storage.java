@@ -2,10 +2,10 @@ package org.digitalcampus.oppia.utils.storage;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-import ly.count.android.sdk.Countly;
 
 public class Storage {
 
@@ -139,7 +138,7 @@ public class Storage {
             try {
                 fileCreated = nomedia.createNewFile();
             } catch (IOException e) {
-                Countly.sharedInstance().crashes().recordHandledException(e);
+                Analytics.logException(e);
                 Log.d(TAG, "IOException", e);
             }
             Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + dir.getAbsolutePath());

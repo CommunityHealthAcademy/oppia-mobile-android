@@ -22,6 +22,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.database.DbHelper;
@@ -35,11 +36,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import ly.count.android.sdk.Countly;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -134,7 +132,7 @@ public class UpdateProfileTask extends APIRequestTask<User, String, EntityResult
 
         } catch (javax.net.ssl.SSLHandshakeException e) {
             Log.d(TAG, "SSLHandshakeException:", e);
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_ssl));
         } catch (UnsupportedEncodingException e) {
@@ -145,7 +143,7 @@ public class UpdateProfileTask extends APIRequestTask<User, String, EntityResult
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_connection_required));
         } catch (JSONException e) {
-            Countly.sharedInstance().crashes().recordHandledException(e);
+            Analytics.logException(e);
             Log.d(TAG, "JSONException:", e);
             result.setSuccess(false);
             result.setResultMessage(ctx.getString(R.string.error_processing_response));
