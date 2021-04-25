@@ -237,11 +237,10 @@ public class App extends Application {
 
         PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
                 .setConstraints(constraints)
-                .setInitialDelay(1, TimeUnit.HOURS)
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_TRACKER_SEND,
-                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
+                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
     }
 
@@ -261,7 +260,7 @@ public class App extends Application {
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(WORK_COURSES_CHECKS,
-                ExistingPeriodicWorkPolicy.KEEP, trackerSendWork);
+                ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
     }
 
