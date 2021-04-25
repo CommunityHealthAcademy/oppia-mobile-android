@@ -106,10 +106,11 @@ public class AboutActivity extends AppActivity {
 			fragments.add(fPolicy);
 			titles.add(this.getString(R.string.tab_title_privacy));
 
+			/*
 			String urlTerms = Storage.getLocalizedFilePath(this, lang, "terms.html");
 			Fragment fTerms = OppiaWebViewFragment.newInstance(TAB_PRIVACY_TERMS, urlTerms);
 			fragments.add(fTerms);
-			titles.add(this.getString(R.string.tab_title_terms));
+			titles.add(this.getString(R.string.tab_title_terms));*/
 
 			String urlWhat = Storage.getLocalizedFilePath(this, lang, "privacy_data_what.html");
 			Fragment fWhat = OppiaWebViewFragment.newInstance(TAB_PRIVACY_WHAT, urlWhat);
