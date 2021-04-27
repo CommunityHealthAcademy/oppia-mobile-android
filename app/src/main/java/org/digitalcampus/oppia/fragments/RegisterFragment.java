@@ -145,6 +145,7 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 			}
 			return true;
 		});
+		 */
 
 		phoneNoFieldPicker = (CountryCodePicker) layout.findViewById(R.id.ccp);
 		EditText phoneEditText = layout.findViewById(R.id.register_form_phoneno_edittext);
@@ -161,10 +162,9 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 				phoneNoField.requestFocus();
 				return false;
 			}
-
 			return true;
 		});
-		 */
+
 
 		passwordField.setCustomValidator(field -> {
 			String password = passwordField.getCleanedValue();
