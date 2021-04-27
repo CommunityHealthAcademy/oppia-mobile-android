@@ -199,6 +199,14 @@ public class RegisterFragment extends AppFragment implements RegisterTask.Regist
 		super.onActivityCreated(savedInstanceState);
 		getAppComponent().inject(this);
 
+		List<String> requiredFields = customFieldsRepo.getRequiredFields(getContext());
+		for (String f : requiredFields){
+			ValidableField field = fields.get(f);
+			if (field != null){
+				field.setRequired(true);
+			}
+		}
+
 		profileCustomFields = customFieldsRepo.getAll(getContext());
 		List<CustomField.RegisterFormStep> registerSteps = customFieldsRepo.getRegisterSteps(getContext());
 		fieldsManager = new CustomFieldsUIManager(this.getActivity(), fields, profileCustomFields);
