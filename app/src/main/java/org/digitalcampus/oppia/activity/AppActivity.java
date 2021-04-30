@@ -51,6 +51,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.di.AppComponent;
@@ -98,6 +99,18 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         Countly.sharedInstance().init(config);
 
         initializeDaggerBase();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Analytics.trackViewOnStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        Analytics.trackViewOnStop(this);
+        super.onStop();
     }
 
     public AppComponent getAppComponent(){
