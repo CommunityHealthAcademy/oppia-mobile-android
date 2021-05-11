@@ -123,17 +123,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
-        Countly.sharedInstance().onStart(this);
-    }
-
-    @Override
-    public void onStop(){
-        Countly.sharedInstance().onStop();
-        super.onStop();
-    }
-    @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
