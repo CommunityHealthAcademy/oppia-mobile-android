@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -47,10 +48,9 @@ public abstract class APIRequestTask<P, G, R> extends AsyncTask<P, G, R> {
         Request.Builder requestBuilder = null;
         try {
             User u = db.getUser(SessionManager.getUsername(ctx));
+
             requestBuilder = new Request.Builder()
-                    .url(url)
-                    .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()));
+                    .url(HTTPClientUtils.getUrlWithCredentials(url, u.getUsername(), u.getApiKey()));
 
         } catch (UserNotFoundException e) {
             Analytics.logException(e);

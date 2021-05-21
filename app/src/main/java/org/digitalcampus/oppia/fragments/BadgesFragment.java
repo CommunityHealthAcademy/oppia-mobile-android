@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.databinding.FragmentAboutBinding;
+import org.digitalcampus.mobile.learning.databinding.FragmentBadgesBinding;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.api.ApiEndpoint;
@@ -56,7 +58,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	@Inject
 	List<Badge> badges;
-	
+	private FragmentBadgesBinding binding;
+
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();
 	}
@@ -67,7 +70,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_badges, container, false);
+		binding = FragmentBadgesBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 	
 	@Override
@@ -76,8 +80,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
-		RecyclerView recyclerBadges = this.getView().findViewById(R.id.recycler_badges);
-		recyclerBadges.setAdapter(adapterBadges);
+		binding.recyclerBadges.setAdapter(adapterBadges);
 
 		getBadges();
 	}
@@ -95,12 +98,12 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
         badges.clear();
 		try {
 
-			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
-			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
-			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
+			binding.emptyState.setVisibility(View.GONE);
+			binding.loadingBadges.setVisibility(View.GONE);
+			binding.errorState.setVisibility(View.GONE);
 
 			if(json.getJSONArray(STR_JSON_OBJECTS).length() == 0){
-				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
+				binding.emptyState.setVisibility(View.VISIBLE);
 				return;
 			}
 			for (int i = 0; i < (json.getJSONArray(STR_JSON_OBJECTS).length()); i++) {
@@ -139,9 +142,9 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		}
 
 		//If we reach this statement there was some error
-		this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
-		this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
-		this.getView().findViewById(R.id.error_state).setVisibility(View.VISIBLE);
+		binding.loadingBadges.setVisibility(View.GONE);
+		binding.emptyState.setVisibility(View.GONE);
+		binding.errorState.setVisibility(View.VISIBLE);
 	}
 
 
