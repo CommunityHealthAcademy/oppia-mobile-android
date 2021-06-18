@@ -17,7 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,8 +28,14 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.databinding.ActivityPreferencesBinding;
+import org.digitalcampus.oppia.fragments.prefs.BasePreferenceFragment;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
 import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -39,22 +44,14 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.result.BasicResult;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -387,9 +384,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         Log.i(TAG, "executeChangeStorageTask: enter");
 
-        ArrayList<Object> data = new ArrayList<>();
-        data.add(storageOption);
-        Payload p = new Payload(data);
         ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
         changeStorageTask.setMoveStorageListener(this);
 
@@ -401,21 +395,21 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         showProgressDialog(getString(R.string.moving_storage_location), false);
 
-        changeStorageTask.execute(p);
+        changeStorageTask.execute(storageOption);
 
         Log.i(TAG, "executeChangeStorageTask: executing task");
     }
 
     //@Override
-    public void moveStorageComplete(Payload p) {
+    public void moveStorageComplete(BasicResult result) {
 
         String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
-        if (p.isResult()) {
+        if (result.isSuccess()) {
             Log.d(TAG, "Move storage completed!");
             Toast.makeText(this, this.getString(R.string.move_storage_completed), Toast.LENGTH_LONG).show();
         } else {
-            Log.d(TAG, "Move storage failed:" + p.getResultResponse());
-            UIUtils.showAlert(this, R.string.error, p.getResultResponse());
+            Log.d(TAG, "Move storage failed:" + result.getResultMessage());
+            UIUtils.showAlert(this, R.string.error, result.getResultMessage());
             //We set the actual storage option (remove the one set by the user)
             if (currentPrefScreen != null) {
                 currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
@@ -438,9 +432,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
-        PreferenceFragmentCompat fragment = null;
+        BasePreferenceFragment fragment = null;
         try {
-            fragment = (PreferenceFragmentCompat) Class.forName(pref.getFragment()).newInstance();
+            fragment = (BasePreferenceFragment) Class.forName(pref.getFragment()).newInstance();
+            fragment.setPrefs(this.prefs);
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "Class not found exception", e);
         } catch (IllegalAccessException e) {

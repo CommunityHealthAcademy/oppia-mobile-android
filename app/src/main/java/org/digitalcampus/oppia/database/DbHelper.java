@@ -24,15 +24,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.analytics.Analytics;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.exception.ActivityNotFoundException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.gamification.Gamification;
@@ -53,7 +55,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
@@ -1089,6 +1090,7 @@ public class DbHelper extends SQLiteOpenHelper {
             activity.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
             activity.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
             activity.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+            activity.setActType(c.getString(c.getColumnIndex(ACTIVITY_C_ACTTYPE)));
             activities.add(activity);
             c.moveToNext();
         }
@@ -1112,6 +1114,24 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         c.close();
         return quizzes;
+    }
+
+    public String getCourseFinalQuizDigest(long courseId) throws ActivityNotFoundException{
+        String s = ACTIVITY_C_COURSEID + STR_EQUALS_AND + ACTIVITY_C_ACTTYPE + STR_EQUALS_AND + ACTIVITY_C_SECTIONID + ">0";
+        String[] args = new String[]{String.valueOf(courseId), "quiz"};
+        String orderBy = ACTIVITY_C_SECTIONID + " DESC, " + ACTIVITY_C_ACTID + " DESC";
+        Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, orderBy);
+        String digest = "";
+        if(c != null) {
+            if (c.moveToFirst()) {
+                digest = c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST));
+            }
+            c.close();
+        }
+        if (digest == "") {
+            throw new ActivityNotFoundException();
+        }
+        return digest;
     }
 
     public QuizStats getQuizAttempt(String digest, long userId) {
